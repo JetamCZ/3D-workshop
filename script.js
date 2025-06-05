@@ -19,21 +19,27 @@ function drawPixel(point, color = '#000000') {
 }
 
 function drawLine(point1, point2, color) {
-    if(point1[0] > point2[0]) {
-        let temp = point2
-        point2 = point1
-        point1 = temp
-    }
-
     const diffX = Math.abs(point1[0] - point2[0])
     const diffY = Math.abs(point1[1] - point2[1])
 
     if(diffX > diffY) {
+        if(point1[0] > point2[0]) {
+            let temp = point2
+            point2 = point1
+            point1 = temp
+        }
+
         for (let x = point1[0]; x < point2[0]; x += 1) {
             const y = interpolate(point1[0], point2[0], point1[1], point2[1], x)
             drawPixel([x, y], color)
         }
     } else {
+        if(point1[1] > point2[1]) {
+            let temp = point2
+            point2 = point1
+            point1 = temp
+        }
+
         for (let y = point1[1]; y < point2[1]; y += 1) {
             const x = interpolate(point1[1], point2[1], point1[0], point2[0], y)
             drawPixel([x, y], color)
@@ -41,6 +47,12 @@ function drawLine(point1, point2, color) {
     }
 }
 
-drawLine([15, 5], [0, 0], "#ff0000")
+drawLine([20, 20], [15, 5], "#ff0000")
 drawLine([10, 15], [0, 0], "#00ff00")
 drawLine([3, 0], [13, 15],"#0000ff")
+
+const triangle = [
+    [15, 5],
+    [0, 0],
+    [13, 15]
+]
