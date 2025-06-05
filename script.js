@@ -61,16 +61,16 @@ function drawTriangle(pointsAll, color) {
     const points = pointsAll.sort((a, b) => a[1] - b[1]);
 
     for (let y = points[0][1]; y <= points[2][1]; y++) {
-        let x1 = interpolate(points[0][1], points[1][1], points[0][0], points[1][0], y)
-        let x2 = interpolate(points[0][1], points[2][1], points[0][0], points[2][0], y)
-
-        drawLine([x1, y], [x2, y], "#ff0000")
+        if(y <= points[1][1]) {
+            const x1 = interpolate(points[0][1], points[1][1], points[0][0], points[1][0], y)
+            const x2 = interpolate(points[0][1], points[2][1], points[0][0], points[2][0], y)
+            drawLine([x1, y], [x2, y], "#ff0000")
+        } else {
+            const x1 = interpolate(points[1][1], points[2][1], points[1][0], points[2][0], y)
+            const x2 = interpolate(points[0][1], points[2][1], points[0][0], points[2][0], y)
+            drawLine([x1, y], [x2, y], "#ff0000")
+        }
     }
-
-    drawLine(points[0], points[1], color)
-    drawLine(points[1], points[2], color)
-    drawLine(points[2], points[0], color)
-
 }
 
 drawTriangle(triangle, "#ff00ff")
