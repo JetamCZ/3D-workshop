@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const scale = 10
+const scale = 5
 
 //                x  y
 // const point = [5, 5]
@@ -51,7 +51,7 @@ function drawLine(point1, point2, color) {
 //drawLine([10, 15], [0, 0], "#00ff00")
 //drawLine([3, 0], [13, 15],"#0000ff")
 
-function drawTriangle(pointsAll, color) {
+function drawFillTriangle(pointsAll, color) {
     const points = pointsAll.sort((a, b) => a[1] - b[1]);
 
     for (let y = points[0][1]; y <= points[2][1]; y++) {
@@ -67,14 +67,83 @@ function drawTriangle(pointsAll, color) {
     }
 }
 
-let triangle = [
-    [15, 5, -1],
-    [40, 40, -1],
-    [0, 30, -1]
+function drawTriangle(points, color) {
+    drawLine(points[0], points[1], color)
+    drawLine(points[1], points[2], color)
+    drawLine(points[2], points[0], color)
+}
+
+
+drawTriangle([
+    [20, 20, 20],
+    [20, 40, 20],
+    [40, 20, 20],
+], "#ff0000")
+
+drawTriangle([
+    [40, 40, 20],
+    [20, 40, 20],
+    [40, 20, 20],
+], "#aaaa00")
+
+
+const cubeVertices = [
+    [-20, -20, -20],
+    [20, -20, -20],
+    [20, 20, -20],
+    [-20, 20, -20],
+    [-20, -20, 20],
+    [20, -20, 20],
+    [20, 20, 20],
+    [-20, 20, 20]
 ]
 
-drawTriangle(triangle, "#ff00ff")
+const cubeEdges = [
+    [0, 1], [1, 2], [2, 3], [3, 0],
+    [4, 5], [5, 6], [6, 7], [7, 4],
+    [0, 4], [1, 5], [2, 6], [3, 7]
+]
 
-triangle = triangle.map((p) => multMat2(p, scaleMatrix(2, 2)))
+function drawCube(vertices, edges, rotationX = 0, rotationY = 0, rotationZ = 0, color = "#ffffff") {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    
+    const rotX = rotationMatrixX(rotationX)
+    const rotY = rotationMatrixY(rotationY)
+    const rotZ = rotationMatrixZ(rotationZ)
+    
+    const combinedRotation = multiplyMatrices(multiplyMatrices(rotX, rotY), rotZ)
+    
+    const transformedVertices = vertices.map(vertex => {
+        const rotated = multMat3(vertex, combinedRotation)
+        const projected = project3Dto2D(rotated)
+        return [
+            Math.round(projected[0] + canvas.width / 2),
+            Math.round(projected[1] + canvas.height / 2)
+        ]
+    })
+    
+    edges.forEach(edge => {
+        const [start, end] = edge
+        const point1 = [
+            Math.floor(transformedVertices[start][0] / scale),
+            Math.floor(transformedVertices[start][1] / scale)
+        ]
+        const point2 = [
+            Math.floor(transformedVertices[end][0] / scale),
+            Math.floor(transformedVertices[end][1] / scale)
+        ]
+        drawLine(point1, point2, color)
+    })
+}
 
-drawTriangle(triangle, "#0000ff")
+/*
+let angle = 0
+function animate() {
+    angle += 0.02
+    drawCube(cubeVertices, cubeEdges, angle, angle * 0.7, angle * 0.3, "#00ff00")
+    requestAnimationFrame(animate)
+}
+
+animate()
+
+ */
