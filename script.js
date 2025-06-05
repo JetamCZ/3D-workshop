@@ -51,12 +51,6 @@ function drawLine(point1, point2, color) {
 //drawLine([10, 15], [0, 0], "#00ff00")
 //drawLine([3, 0], [13, 15],"#0000ff")
 
-const triangle = [
-    [15, 5],
-    [40, 40],
-    [0, 30]
-]
-
 function drawTriangle(pointsAll, color) {
     const points = pointsAll.sort((a, b) => a[1] - b[1]);
 
@@ -64,13 +58,23 @@ function drawTriangle(pointsAll, color) {
         if(y <= points[1][1]) {
             const x1 = interpolate(points[0][1], points[1][1], points[0][0], points[1][0], y)
             const x2 = interpolate(points[0][1], points[2][1], points[0][0], points[2][0], y)
-            drawLine([x1, y], [x2, y], "#ff0000")
+            drawLine([x1, y], [x2, y], color)
         } else {
             const x1 = interpolate(points[1][1], points[2][1], points[1][0], points[2][0], y)
             const x2 = interpolate(points[0][1], points[2][1], points[0][0], points[2][0], y)
-            drawLine([x1, y], [x2, y], "#ff0000")
+            drawLine([x1, y], [x2, y], color)
         }
     }
 }
 
+let triangle = [
+    [15, 5, -1],
+    [40, 40, -1],
+    [0, 30, -1]
+]
+
 drawTriangle(triangle, "#ff00ff")
+
+triangle = triangle.map((p) => multMat2(p, scaleMatrix(2, 2)))
+
+drawTriangle(triangle, "#0000ff")
