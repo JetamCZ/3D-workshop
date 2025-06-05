@@ -47,12 +47,30 @@ function drawLine(point1, point2, color) {
     }
 }
 
-drawLine([20, 20], [15, 5], "#ff0000")
-drawLine([10, 15], [0, 0], "#00ff00")
-drawLine([3, 0], [13, 15],"#0000ff")
+//drawLine([20, 20], [15, 5], "#ff0000")
+//drawLine([10, 15], [0, 0], "#00ff00")
+//drawLine([3, 0], [13, 15],"#0000ff")
 
 const triangle = [
     [15, 5],
-    [0, 0],
-    [13, 15]
+    [40, 40],
+    [0, 30]
 ]
+
+function drawTriangle(pointsAll, color) {
+    const points = pointsAll.sort((a, b) => a[1] - b[1]);
+
+    for (let y = points[0][1]; y <= points[2][1]; y++) {
+        let x1 = interpolate(points[0][1], points[1][1], points[0][0], points[1][0], y)
+        let x2 = interpolate(points[0][1], points[2][1], points[0][0], points[2][0], y)
+
+        drawLine([x1, y], [x2, y], "#ff0000")
+    }
+
+    drawLine(points[0], points[1], color)
+    drawLine(points[1], points[2], color)
+    drawLine(points[2], points[0], color)
+
+}
+
+drawTriangle(triangle, "#ff00ff")
